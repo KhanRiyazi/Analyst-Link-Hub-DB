@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Analyst Link Hub</title>
+<meta name="description" content="Organize your dashboards, datasets and docs in one place. Reminders, priorities and a decision brief for data analysts, with Google Workspace shortcuts.">
+<meta name="theme-color" content="#0b57d0">
+<meta property="og:title" content="Analyst Link Hub">
+<meta property="og:description" content="A link organizer with reminders and a decision brief for data analysts.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<noscript>This app needs JavaScript turned on.</noscript>
+<header class="appbar"><div class="brand"><span class="logo"></span><span class="bn">Link Hub</span></div><label class="search"><span aria-hidden="true">⌕</span><input id="q" type="search" placeholder="Search links  ( / )" aria-label="Search links"></label><span class="sp"></span><button class="ib" id="sync" aria-label="Google Sheets sync" title="Google Sheets sync">☁</button><button class="ib" id="theme" aria-label="Switch light or dark theme" title="Theme">◐</button><button class="ib" id="apps" aria-label="Workspace apps" title="Workspace apps"><span class="dots"></span></button></header>
+<div id="appm" class="appm"></div><div id="snack" class="snack" role="status"></div>
+<div class="shell"><nav id="nav" class="nav" aria-label="Views"><div id="navmain"></div><details class="gh" id="pathd" open><summary>Analyst workflow</summary><div id="stages"></div></details><details class="gh" id="hubd"><summary>Google hub · analyst order</summary><div id="ghub"></div></details><div id="navrev"></div><div id="review"></div></nav>
+<div id="scrim" class="scrim"></div>
+<main class="wrap">
+  <h1 id="hi">Welcome</h1><p class="sub" id="dl"></p>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid">
+    <div class="stack">
+      <section class="panel hero"><h2>Your mentor</h2><div id="mentor"></div></section>
+      <section class="panel"><div class="ph"><h2>Today’s focus</h2><label class="tbox">Time I have <select id="tb" class="sel" aria-label="Time available today"><option value="15">15 min</option><option value="30">30 min</option><option value="60" selected>1 hour</option><option value="120">2 hours</option><option value="240">Half day</option></select></label></div><div id="focus"></div><p class="note" id="fsum"></p></section>
+      <section class="panel"><h2>Workload check</h2><div id="decide"></div></section>
+      
+      <section class="panel" id="all"><div class="ph"><h2 id="lt">All links</h2><div class="tools"><select id="sort" class="sel" aria-label="Sort links"><option value="score">Sort: Priority</option><option value="path">Sort: Analyst path</option></select><button class="btn" id="bulk">Paste many links</button><button class="btn" id="exp">Export</button><button class="btn" id="icons">Site icons: On</button><button class="btn" id="clr">Clear all</button><button id="add" hidden>Add</button></div></div><div class="chips" id="chips"></div><div id="list"></div></section>
+    </div>
+    <aside class="stack">
+      <section class="panel" id="decp"><h2>Decision log</h2><textarea id="dec-t" rows="2" placeholder="What did you decide?" aria-label="Decision"></textarea><input id="dec-w" placeholder="Because (the evidence)" aria-label="Reason" style="margin-top:6px"><button class="btn pri" id="dec-save" style="margin-top:8px">Save decision</button><ul class="declist" id="declist"></ul></section>
+      <section class="panel"><h2>Insights</h2><ul class="ins" id="ins"></ul></section>
+      <section class="panel"><h2>Analyst path coverage</h2><div class="path" id="bar"></div><div id="leg"></div></section>
+      <section class="panel"><h2>Google hub</h2><div id="ws"></div></section>
+    </aside>
+  </div>
+</main></div>
+<nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+
+<dialog id="dlg">
+  <h2 id="dt">Add link</h2>
+  <label for="f-url">URL</label><input id="f-url" placeholder="https://">
+  <label for="f-title">Title (optional)</label><input id="f-title" placeholder="Filled in from the site name if empty">
+  <label>Icon (helps you recognise the link)</label>
+  <div class="icrow"><span id="ic-prev"></span><button class="btn" type="button" id="ic-up">Upload image</button><input id="ic-emo" placeholder="😀" maxlength="4" aria-label="Emoji icon"><button class="btn" type="button" id="ic-auto">Auto</button><input type="file" id="ic-file" accept="image/*" hidden></div>
+  <p class="note" style="margin-top:4px">Auto uses the site’s own icon. An uploaded image is cropped square and kept only in this browser.</p>
+  <div class="row">
+    <div><label for="f-cat">Category</label><select id="f-cat"></select></div>
+    <div><label for="f-pri">Importance</label><select id="f-pri"><option value="3">Must do</option><option value="2" selected>Should do</option><option value="1">Later</option><option value="0">Not sorted (Inbox)</option></select></div>
+  </div>
+  <div class="row"><div><label for="f-due">Remind me on</label><input id="f-due" type="date"></div><div><label for="f-min">Time needed</label><select id="f-min"><option value="5">5 min</option><option value="15" selected>15 min</option><option value="30">30 min</option><option value="60">1 hour</option><option value="120">2 hours</option></select></div></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+    <button class="btn" id="cx">Cancel</button><button class="btn pri" id="sv">Save link</button>
+  </div>
+</dialog>
+
+<dialog id="dlg2">
+  <h2>Paste many links</h2>
+  <p class="sub" style="margin-bottom:8px">One per line. Use <i>Title | URL</i> or just the URL. Categories are guessed from the site.</p>
+  <textarea id="bulk-t" rows="8" placeholder="https://app.powerbi.com/...&#10;Sales cube | https://example.com/sales"></textarea>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+    <button class="btn" id="cx2">Cancel</button><button class="btn pri" id="sv2">Import links</button>
+  </div>
+</dialog>
+
+<dialog id="dlg3">
+  <h2>Customize launcher</h2>
+  <p class="sub" style="margin-bottom:8px">Rename apps, change their links, or add your own. They appear in the ⋮⋮⋮ menu.</p>
+  <div id="app-rows"></div><button class="btn" id="app-add" style="margin-top:6px">＋ Add app</button>
+  <div style="display:flex;gap:8px;justify-content:space-between;margin-top:16px"><button class="btn" id="app-reset">Reset</button><div style="display:flex;gap:8px"><button class="btn" id="cx3">Cancel</button><button class="btn pri" id="sv3">Save</button></div></div>
+</dialog>
+
+<dialog id="dlg4">
+  <h2>Google Sheets sync</h2>
+  <p class="sub" style="margin-bottom:6px">Keep your data in your own Google Sheet through a free Apps Script. Your URL and key stay in this browser. Steps are in docs/SETUP.md.</p>
+  <label for="sy-url">Web app URL</label><input id="sy-url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off">
+  <label for="sy-key">Secret key</label><input id="sy-key" type="password" placeholder="From the Link Hub menu in your Sheet" autocomplete="off">
+  <label class="chk"><input type="checkbox" id="sy-auto" checked> Save changes to the Sheet automatically</label>
+  <p class="note" id="sy-st">Not connected.</p>
+  <div class="syrow"><button class="btn" id="sy-load">Load from Sheet</button><button class="btn" id="sy-save">Save to Sheet</button><button class="btn" id="sy-off">Disconnect</button></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn" id="sy-x">Close</button><button class="btn pri" id="sy-ok">Connect</button></div>
+</dialog>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/sync.js"></script>
+</body>
+</html>

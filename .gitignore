@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+*.log
+
+Secret key f9b852fc57f647d1ae9e8215ad53eb0ad5543b71bc3d4bbdb2b6c7a03e452ea2
